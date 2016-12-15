@@ -69,14 +69,8 @@ void setup() {
 
 void updateControl() {
   chuck.update();
-  // print the sensor reading so you know its range
-  if ( chuck.buttonZ )
-  {
 
-    envelope.noteOn();
-  }
-
-  int Pitch = map(chuck.readPitch(), 0, 170, 1, 16);
+  int Pitch = map(chuck.readPitch(), 0, 170, 1, 16); // map the Pitch to 1-16 to pick notes of G7 Arpeggio (V7 chord)
   if (chuck.buttonZ) {
     switch (Pitch) {
       case 1:
@@ -134,7 +128,7 @@ void updateControl() {
   }
 
   else {
-    switch (Pitch) {
+    switch (Pitch) {     //Map notes to Cmaj7 Arpeggio (I chord)
       case 1:
         aSin.setFreq(NOTE_C3);
         break;
@@ -187,15 +181,17 @@ void updateControl() {
         break;
     }
   }
-
-  if (chuck.buttonC) {
+    // Now we will turn on the phase mod envelope if the user is holding down the C-Button
+  if (chuck.buttonC) {   
     gain = chuck.readJoyY() + 114;
     int roll = map(chuck.readRoll(), -180, 180, 1, 7);
     aEnvelop.setFreq(roll); //Map Roll coordinates to between 4 and 20 Hz for Modulator width
     aModulator.setFreq(aSin.next() + 0.4313f * kModFreq1.next() + kModFreq2.next());
   }
+    // Use the joystick's Y-value to change the volume of a note up or down
   gain = chuck.readJoyY() + 114;
-  envelope.update();
+    
+  envelope.update(); // Make sure any updated parameters are saved
 
 
 }
